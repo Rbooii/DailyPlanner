@@ -1,50 +1,64 @@
-//
-//  ContentView.swift
-//  DailyPlan
-//
-//  Created by Arco zakwan putra on 25/03/26.
-//
-
 import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var auth: AuthManager
-    @State var LoginPressed = false
-    
+    @State var loginPressed = false
+    @State private var appeared = false
+
     var body: some View {
-        NavigationStack{
-            VStack{
-                HStack{
-                    VStack(alignment: .leading) {
-                        Text("DailyPlan")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                        Text("Set Goal For the day, Win Everyday and Get Better")
-                    }
-                    Spacer()
-                }.padding(16)
-                
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 0) {
                 Spacer()
-                Button(action: {
-                    LoginPressed = true
-                }) {
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Daily")
+                        .font(.system(size: 52, weight: .bold))
+                        .offset(y: appeared ? 0 : 30)
+                        .opacity(appeared ? 1 : 0)
+                        .animation(.spring(response: 0.7, dampingFraction: 0.8).delay(0.1), value: appeared)
+
+                    Text("Plan.")
+                        .font(.system(size: 52, weight: .bold))
+                        .foregroundStyle(.tint)
+                        .offset(y: appeared ? 0 : 30)
+                        .opacity(appeared ? 1 : 0)
+                        .animation(.spring(response: 0.7, dampingFraction: 0.8).delay(0.25), value: appeared)
+
+                    Text("Set a goal. Win the day.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .padding(.top, 4)
+                        .offset(y: appeared ? 0 : 20)
+                        .opacity(appeared ? 1 : 0)
+                        .animation(.spring(response: 0.7, dampingFraction: 0.8).delay(0.4), value: appeared)
+                }
+                .padding(.horizontal, 28)
+
+                Spacer()
+
+                Button(action: { loginPressed = true }) {
                     Text("Get Started")
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.accentColor)
-                        .foregroundStyle(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                }.padding()
-            }.navigationDestination(isPresented: $LoginPressed){
+                        .background(Color.primary)
+                        .foregroundStyle(Color(UIColor.systemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 60))
+                }
+                .padding(.horizontal, 28)
+                .padding(.bottom, 48)
+                .offset(y: appeared ? 0 : 20)
+                .opacity(appeared ? 1 : 0)
+                .animation(.spring(response: 0.7, dampingFraction: 0.8).delay(0.55), value: appeared)
+            }
+            .navigationDestination(isPresented: $loginPressed) {
                 LoginView()
             }
-        }.onAppear {
+        }
+        .onAppear {
+            appeared = true
             if auth.isLoggedIn {
-                LoginPressed = true
-                print("Already Logged in")
-            }else{
-                print("not yet logged in")
+                loginPressed = true
             }
         }
     }
