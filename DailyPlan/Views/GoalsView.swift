@@ -18,13 +18,13 @@ struct GoalsView: View {
 
     var body: some View {
         NavigationStack {
-            Group {
+            ZStack {
                 if manager.goals.isEmpty {
                     ContentUnavailableView(
                         "No Goals Yet",
                         systemImage: "flag.fill",
                         description: Text("Add your first goal for today.")
-                    )
+                    ).transition(.opacity.combined(with: .scale(scale: 0.95)))
                 } else {
                     List {
                         Section {
@@ -65,9 +65,9 @@ struct GoalsView: View {
                             }
                             .onDelete(perform: manager.delete)
                         }
-                    }
+                    }.transition(.opacity.combined(with: .move(edge: .bottom)))
                 }
-            }
+            }.animation(.spring(response: 0.5, dampingFraction: 0.8), value: manager.goals.isEmpty)
             .navigationTitle(realTitle())
             .navigationSubtitle(todayTitle())
             .navigationBarTitleDisplayMode(.large)
