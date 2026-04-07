@@ -6,11 +6,11 @@ struct GoalsView: View {
     @State private var newGoalText = ""
     @State private var showInput = false
     @Environment(\.scenePhase) private var scenePhase
-    
+
     init(email: String) {
         _manager = StateObject(wrappedValue: GoalsManager(email: email))
     }
-    
+
     private var progress: Double {
         guard manager.totalCount > 0 else { return 0 }
         return Double(manager.completedCount) / Double(manager.totalCount)
@@ -68,31 +68,19 @@ struct GoalsView: View {
                     }
                 }
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .safeAreaInset(edge: .top) {
-                HStack {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(realTitle())
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                        Text(todayTitle())
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                    }
-                    Spacer()
+            .navigationTitle(realTitle())
+            .navigationSubtitle(todayTitle())
+            .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
                     Button(action: { showInput = true }) {
                         Image(systemName: "plus")
-                            .font(.title3)
+                            .font(.body)
                             .fontWeight(.semibold)
-                            .foregroundStyle(.white)
-                            .frame(width: 36, height: 36)
-                            .background(Color.accentColor)
-                            .clipShape(Circle())
+                            .frame(width: 32, height: 32)
                     }
+                    .glassEffect(in: Circle())
                 }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 12)
-                .background(Color(.systemBackground))
             }
             .sheet(isPresented: $showInput) {
                 AddGoalSheet(isPresented: $showInput) { title in
@@ -125,12 +113,9 @@ struct GoalsView: View {
 
     private func realTitle() -> String {
         switch manager.totalCount {
-        case 0:
-            return "Pretty Chill.. 😴"
-        case 1:
-            return "Today's Goal"
-        default:
-            return "Today's Goals 🔥"
+        case 0: return "Pretty Chill.. 😴"
+        case 1: return "Today's Goal"
+        default: return "Today's Goals 🔥"
         }
     }
 }
