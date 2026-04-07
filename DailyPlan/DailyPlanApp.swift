@@ -1,17 +1,13 @@
-//
-//  DailyPlanApp.swift
-//  DailyPlan
-//
-//  Created by Arco zakwan putra on 25/03/26.
-//
-
 import SwiftUI
 
 @main
 struct DailyPlanApp: App {
+    @StateObject private var auth = AuthManager()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
+                .environmentObject(auth)
         }
     }
 }
